@@ -14,8 +14,6 @@ will be shown.
 ######################################################################
 # IMPORTS AND GLOBAL VARIABLES ---------------------------------------
 
-loop = True
-
 movementOptions = ["Walk", "Swim", "Fly", "Quit"]
 
 directionOptions = ["Up", "Down", "Left", "Right", "Quit"]
@@ -44,11 +42,11 @@ dungeon_rooms = {
         " rocks beneath your feet make it hard to balance your footing."}
 }
 
-dungeon_map = [["Floor One", "Starting Room"],
-               ["Floor One", "Staff Room"],
-               ["Floor One", "Book Room"],
-               ["Floor One", "Upgrade Room"],
-               ["Floor Two", "Hallway"]]
+dungeon_map = [
+    ["Starting Room", "Staff Room", "Upgrade Room", "Book Room"],
+    ["Hallway", "Book Room", "Hallway", "Staff Room"],
+    ["Staff Room", "Hallway", "Book Room", "Hallway"],
+]
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -81,8 +79,22 @@ def mainMenu():
         print("There was an error.")
 
 
+def movePlayer(direct):
+    try:
+        if direct == "Up":
+            player["yLoc"] -= 1
+        elif direct == "Down":
+            player["yLoc"] += 1
+        elif direct == "Left":
+            player["xLoc"] -= 1
+        elif direct == "Right":
+            player["xLoc"] += 1
+    except Exception:
+        print("There was an error.")
+
+
 def main():
-    global loop
+    loop = True
     try:
         while loop:
             test = mainMenu()
@@ -92,7 +104,23 @@ def main():
                 print(test)
                 print("\n")
                 loop = False
-                direction()
+                
+                secondLoop = True
+                while secondLoop: 
+                    choice = direction()
+                    if choice == "Quit":
+                        return print("Quitting...")
+                    elif choice is not None:
+                        #print(choice)
+                        print("\n")
+                        #secondLoop = False
+                        movePlayer(choice)
+                        playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
+                        print(dungeon_rooms[playerLocation])
+                        print("You continue forward.")
+                        print("\n")
+                    else:
+                        print("Try again.")
             else:
                 print("Try again.")
     except Exception:
