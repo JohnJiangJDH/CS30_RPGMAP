@@ -81,13 +81,13 @@ def mainMenu():
 
 def movePlayer(direct):
     try:
-        if direct == "Up":
+        if direct == "Up" :#and 0<=player["yLoc"]<=2:
             player["yLoc"] -= 1
-        elif direct == "Down":
+        elif direct == "Down": #and 0<=player["yLoc"]<=2:
             player["yLoc"] += 1
-        elif direct == "Left":
+        elif direct == "Left" :#and 0<=player["xLoc"]<=3:
             player["xLoc"] -= 1
-        elif direct == "Right":
+        elif direct == "Right": #and 0<=player["xLoc"]<=3:
             player["xLoc"] += 1
     except Exception:
         print("There was an error.")
@@ -115,6 +115,8 @@ def main():
                         print("\n")
                         #secondLoop = False
                         movePlayer(choice)
+                        if player["yLoc"] <= 0 or player["xLoc"] <= 0:
+                            print("You have reached the border and cannot go further.")
                         playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
                         print(dungeon_rooms[playerLocation])
                         print("You continue forward.")
