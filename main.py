@@ -115,12 +115,23 @@ def main():
                         print("\n")
                         #secondLoop = False
                         movePlayer(choice)
-                        if player["yLoc"] <= 0 or player["xLoc"] <= 0:
+                        if player["yLoc"] < 0:
+                            player["yLoc"] += 1
                             print("You have reached the border and cannot go further.")
-                        playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
-                        print(dungeon_rooms[playerLocation])
-                        print("You continue forward.")
-                        print("\n")
+                        elif player["yLoc"] > 2:
+                            player["yLoc"] -= 1
+                            print("You have reached the border and cannot go further.")
+                        elif player["xLoc"] < 0:
+                            player["xLoc"] += 1
+                            print("You have reached the border and cannot go further.")
+                        elif player["xLoc"] > 3:
+                            player["xLoc"] -= 1
+                            print("You have reached the border and cannot go further.")
+                        else:
+                            playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
+                            print(dungeon_rooms[playerLocation])
+                            print("You continue forward.")
+                            print("\n")
                     else:
                         print("Try again.")
             else:
