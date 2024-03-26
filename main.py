@@ -14,10 +14,14 @@ will be shown.
 ######################################################################
 # IMPORTS AND GLOBAL VARIABLES ---------------------------------------
 
+# Import tabulate for map table
+from tabulate import tabulate
+# The file containing the map of dungeon
+mapFile = "map.txt"
 # List of movement options for main menu
 movementOptions = ["Walk", "Swim", "Fly", "Quit"]
 # List of direction options for sub menu
-directionOptions = ["Up", "Down", "Left", "Right", "Quit"]
+directionOptions = ["Up", "Down", "Left", "Right", "View Map", "Quit"]
 # Player coordinates to save current location. Begins at starting room (0,0)
 player = {"xLoc": 0, "yLoc": 0}
 # Database for the name and description of each individual room on map
@@ -123,12 +127,48 @@ def movePlayer(direct):
         print("There was an error.")
 
 
+def writeFile():
+    """This function writes the map to an external file."""
+    global mapFile
+    try:
+        with open(mapFile, 'w') as file:
+            file.write(tabulate(dungeon_map, tablefmt = "grid"))
+    except:
+        print("An error occurred when writing the file.")
+    else:
+        print("\n")
+        print("You have a map of the dungeon with you.")
+    finally:
+        print("Use it to your advantage.")
+        print("\n")
+
+
+def readFile():
+    """
+    This function reads an external file to print the map 
+    to the console.
+    """
+    global mapFile
+    try:
+        with open(mapFile, 'r') as file:
+            print(file.read())
+    except:
+        print("An error occurred when reading the file.")
+    else:
+        print("What a useful map.")
+    finally:
+        print("You continue forward.")
+        print("\n")
+
+
 def main():
     """Main function responsible for calling other functions"""
     loop = True
     try:
         # Print the initial room that the player starts in
         print(dungeon_rooms["Starting Room"]["Description"])
+        # Player begins with map when entering dungeon
+        writeFile()
         # While for continuous main menu
         while loop:
             # Call and check validity of player's choice of movement
@@ -148,6 +188,12 @@ def main():
                     choice = direction()
                     if choice == "Quit":
                         return print("Quitting...") # Return if quit is chosen
+                    elif choice == "View Map":
+                        print("\n")
+                        # If view map is chosen, print the map to console
+                        # Since we already begin with the map in
+                        # External file
+                        readFile()
                     elif choice is not None:
                         # Otherwise, the direction choice chosen is valid
                         print("\n")
