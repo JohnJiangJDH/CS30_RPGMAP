@@ -16,10 +16,12 @@ will be shown.
 
 #Import Map module
 import map
+# Import Inventory module
+import inventory
 # List of movement options for main menu
-movementOptions = ["Walk", "Swim", "Fly", "Check Inventory", "Quit"]
+movementOptions = ["Move", "View Map", "Check Inventory", "Quit"]
 # List of direction options for sub menu
-directionOptions = ["Up", "Down", "Left", "Right", "View Map", "Back", "Quit"]
+directionOptions = ["Up", "Down", "Left", "Right", "Search The Area", "Back", "Quit"]
 # Player coordinates to save current location. Begins at starting room (0,0)
 player = {"xLoc": 0, "yLoc": 0}
 # Database for the name and description of each individual room on map
@@ -30,11 +32,13 @@ dungeon_rooms = {
     "Staff Room": {
         "Description": "This room is completely barren, except for the"+
         " presence of a large stone. Stuck inside the stone is none"+
-        " other than a staff."},
+        " other than a staff.",
+        "ItemStatus": True},
     "Book Room": {
         "Description": "This room feels ancient. There are images "+
         "carved into all the walls. A floating grimoire sits in the"+
-        " centre."},
+        " centre.",
+        "ItemStatus": False},
     "Upgrade Room": {
         "Description": "A crafting bench is situated in the middle "+
         "of the room. The entire room radiates an abundant amount of"+
@@ -139,6 +143,12 @@ def main():
             firstMenu = mainMenu()
             if firstMenu == "Quit":
                 return print("Quitting...") # Return if quit is chosen
+            elif firstMenu == "View Map":
+                print("\n")
+                # If view map is chosen, print the map to console
+                # Since we already begin with the map in
+                # External file
+                map.readFile()
             elif firstMenu == "Check Inventory":
                 print("PLACEHOLDER")
             elif firstMenu is not None:
@@ -162,12 +172,11 @@ def main():
                         loop = True
                         print("\n")
                         print("Choose an option.")
-                    elif choice == "View Map":
-                        print("\n")
-                        # If view map is chosen, print the map to console
-                        # Since we already begin with the map in
-                        # External file
-                        map.readFile()
+                    elif choice == "Search The Area":
+                        playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
+                        itemOrNot = dungeon_rooms[playerLocation]["ItemStatus"]
+                        inventory.takeItem(playerLocation, itemOrNot)
+                        itemOrNot = False
                     elif choice is not None:
                         # Otherwise, the direction choice chosen is valid
                         print("\n")
