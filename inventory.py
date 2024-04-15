@@ -16,19 +16,40 @@ items = {
 }
 
 
+def inventoryMenu(inventory):
+    """
+    This function creates the menu that displays the users inventory
+    """
+    try:
+        # Loop through list of inventory items
+        for item in inventory:
+            # Print the current amount of each item
+            print(f"You currently have {inventory[item]} {item}s")
+    except Exception:
+        print("There was an error.")
+
+
 def takeItem(currentRoom, currentItemStatus):
     if currentRoom == "Staff Room":
         if currentItemStatus:
-            print("You release the staff from the stone and examine it.")
-            print("\n")
+            print("You release the staff from the stone and examine it:")
             print(items["Staff"]["Description"])
-            print("\n")
             print("You place the staff into your inventory.")
+            print("\n")
+            return "Staff"
+        else:
+            print("There is nothing noteworthy to find here.")
+            print("\n")
     elif currentRoom == "Book Room":
-        print("You embrace the book and examine it.")
-        print("\n")
-        print(items["Grimoire"]["Description"])
-        print("\n")
-        print("You place the book into your inventory.")
+        if currentItemStatus:
+            print("You embrace the book and examine it:")
+            print(items["Grimoire"]["Description"])
+            print("You place the book into your inventory.")
+            print("\n")
+            return "Book"
+        else:
+            print("There is nothing noteworthy to find here.")
+            print("\n")
     else:
         print("There is nothing noteworthy to find here.")
+        print("\n")

@@ -28,7 +28,8 @@ player = {"xLoc": 0, "yLoc": 0}
 dungeon_rooms = {
     "Starting Room": {
         "Description": "You have entered some ruins and the "+
-        "exploration of a mysterious dungeon awaits you."},
+        "exploration of a mysterious dungeon awaits you.",
+        "ItemStatus": False},
     "Staff Room": {
         "Description": "This room is completely barren, except for the"+
         " presence of a large stone. Stuck inside the stone is none"+
@@ -38,22 +39,26 @@ dungeon_rooms = {
         "Description": "This room feels ancient. There are images "+
         "carved into all the walls. A floating grimoire sits in the"+
         " centre.",
-        "ItemStatus": False},
+        "ItemStatus": True},
     "Upgrade Room": {
         "Description": "A crafting bench is situated in the middle "+
         "of the room. The entire room radiates an abundant amount of"+
-        " magical energy."},
+        " magical energy.",
+        "ItemStatus": False},
     "Hallway": {
         "Description": "A long, seemingly endless corridor. The uneven"+
-        " rocks beneath your feet make it hard to balance your footing."},
+        " rocks beneath your feet make it hard to balance your footing.",
+        "ItemStatus": False},
     "Eternal Slumber": {
         "Description": "A room with a relaxing aura, dimly lit by torches."+
         " The Queen, previous ruler of this area, now rests inside the"+
-        " coffin layered with flowers."},
+        " coffin layered with flowers.",
+        "ItemStatus": False},
     "Feasting Room": {
         "Description": "Numerous tables stand organized before you in"+
         " long rows. There is an assortment of deliciously looking"+
-        " delicacies awaiting."}
+        " delicacies awaiting.",
+        "ItemStatus": False}
 }
 # Layout of map with rooms in a 4x3 multi-dimensional list
 dungeon_map = [
@@ -61,6 +66,11 @@ dungeon_map = [
     ["Eternal Slumber", "Book Room", "Hallway", "Staff Room"],
     ["Staff Room", "Feasting Room", "Book Room", "Hallway"],
 ]
+#Items in Inventory 
+inventoryItems = {
+    "Staff": 0,
+    "Book": 0
+}
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -150,7 +160,9 @@ def main():
                 # External file
                 map.readFile()
             elif firstMenu == "Check Inventory":
-                print("PLACEHOLDER")
+                print("\n")
+                inventory.inventoryMenu(inventoryItems)
+                print("\n")
             elif firstMenu is not None:
                 # Otherwise, the movement choice chosen is valid
                 print(f"You have chosen to {firstMenu}")
@@ -173,13 +185,17 @@ def main():
                         print("\n")
                         print("Choose an option.")
                     elif choice == "Search The Area":
+                        print("\n")
                         playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
                         itemOrNot = dungeon_rooms[playerLocation]["ItemStatus"]
-                        inventory.takeItem(playerLocation, itemOrNot)
-                        itemOrNot = False
+                        item = inventory.takeItem(playerLocation, itemOrNot)
+                        dungeon_rooms[playerLocation]["ItemStatus"] = False
+                        if item == "Staff":
+                            inventoryItems["Staff"] += 1
+                        elif item == "Book":
+                            inventoryItems["Book"] += 1
                     elif choice is not None:
                         # Otherwise, the direction choice chosen is valid
-                        print("\n")
                         # Call function to update the player's coordinates
                         movePlayer(choice)
                         print("\n")
