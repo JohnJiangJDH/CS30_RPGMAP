@@ -66,6 +66,8 @@ dungeon_map = [
     ["Eternal Slumber", "Book Room", "Hallway", "Staff Room"],
     ["Staff Room", "Feasting Room", "Book Room", "Hallway"],
 ]
+#Map of item statuses in each room
+item_status_map = inventory.itemMap(dungeon_map, dungeon_rooms)
 #Items in Inventory 
 inventoryItems = {
     "Staff": 0,
@@ -161,6 +163,9 @@ def main():
                 map.readFile()
             elif firstMenu == "Check Inventory":
                 print("\n")
+                # If Check Inventory is chosen:
+                # Print a menu with the names and amounts of items
+                # That are currently in the inventory. Initially 0.
                 inventory.inventoryMenu(inventoryItems)
                 print("\n")
             elif firstMenu is not None:
@@ -186,10 +191,20 @@ def main():
                         print("Choose an option.")
                     elif choice == "Search The Area":
                         print("\n")
+                        # If Search The Area is chosen:
+                        # Get current player location
                         playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
-                        itemOrNot = dungeon_rooms[playerLocation]["ItemStatus"]
-                        item = inventory.takeItem(playerLocation, itemOrNot)
-                        dungeon_rooms[playerLocation]["ItemStatus"] = False
+                        # Get current status of item in room
+                        # True if there is an available item to collect, False if not
+                        itemLocation = item_status_map[player["yLoc"]][player["xLoc"]]
+                        # Take item, depending on the current room
+                        # And item status
+                        item = inventory.takeItem(playerLocation, itemLocation)
+                        # Set current room's item status to False
+                        # Because cannot collect a second time
+                        item_status_map[player["yLoc"]][player["xLoc"]] = False
+                        # If item was successfully collected:
+                        # Update inventory items + amounts as needed
                         if item == "Staff":
                             inventoryItems["Staff"] += 1
                         elif item == "Book":
