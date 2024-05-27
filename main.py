@@ -20,42 +20,7 @@ import map
 import inventory
 
 
-# Database for the name and description of each individual room on map
-dungeon_rooms = {
-    "Starting Room": {
-        "Description": "You have entered some ruins and the "+
-        "exploration of a mysterious dungeon awaits you.",
-        "ItemStatus": False},
-    "Staff Room": {
-        "Description": "This room is completely barren, except for the"+
-        " presence of a large stone. Stuck inside the stone is none"+
-        " other than a staff.",
-        "ItemStatus": True},
-    "Book Room": {
-        "Description": "This room feels ancient. There are images "+
-        "carved into all the walls. A floating grimoire sits in the"+
-        " centre.",
-        "ItemStatus": True},
-    "Upgrade Room": {
-        "Description": "A crafting bench is situated in the middle "+
-        "of the room. The entire room radiates an abundant amount of"+
-        " magical energy.",
-        "ItemStatus": False},
-    "Hallway": {
-        "Description": "A long, seemingly endless corridor. The uneven"+
-        " rocks beneath your feet make it hard to balance your footing.",
-        "ItemStatus": False},
-    "Eternal Slumber": {
-        "Description": "A room with a relaxing aura, dimly lit by torches."+
-        " The Queen, previous ruler of this area, now rests inside the"+
-        " coffin layered with flowers.",
-        "ItemStatus": False},
-    "Feasting Room": {
-        "Description": "Numerous tables stand organized before you in"+
-        " long rows. There is an assortment of deliciously looking"+
-        " delicacies awaiting.",
-        "ItemStatus": False}
-}
+
 # Layout of map with rooms in a 4x3 multi-dimensional list
 dungeon_map = [
     ["Starting Room", "Staff Room", "Upgrade Room", "Book Room"],
@@ -72,49 +37,6 @@ inventoryItems = {
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
-
-
-def direction():
-    """
-    This function creates the sub menu for the user to choose the 
-    direction they want to move in
-    """
-    try:
-        print("Now choose your direction. ")
-        count = 0
-        # Loop through list of direction options aka up down left right
-        for option in directionOptions:
-            # Give each listed option an identifier ie 1), 2), 3), etc.
-            if count <= len(directionOptions):
-                count += 1
-                print(f"{count}) {option}") # Print options
-        # User input to choose direction, only allows index number
-        directionChoice = int(input("CHOOSE A NUMBER: "))
-        # Return the direction option chosen from the list
-        return directionOptions[directionChoice-1]
-    except Exception:
-        print("There was an error. Read instructions carefully and check your input.")
-
-
-def mainMenu():
-    """
-    This function creates the main menu for the user to choose their
-    movement option
-    """
-    try:
-        count = 0
-        # Loop through list of movement options aka walk, swim, fly
-        for option in movementOptions:
-            # Give each listed option an identifier ie 1), 2), 3), etc.
-            if count <= len(movementOptions):
-                count += 1
-                print(f"{count}) {option}") # Print options
-        # User input to choose movement, only allows index number
-        movement = int(input("CHOOSE A NUMBER: "))
-        # Return the movement option chosen from the list
-        return movementOptions[movement-1]
-    except Exception:
-        print("There was an error. Read instructions carefully and check your input.")
 
 
 def movePlayer(direct):
