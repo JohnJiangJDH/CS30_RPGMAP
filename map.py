@@ -88,6 +88,30 @@ class Map:
             print("You continue forward.")
             print("\n")
 
+class ItemMap(Map):
+    def itemMap(self):
+        """
+        This function creates a map of the status of items in each room
+        of the dungeon.
+        """
+        try:
+            listOne = []
+            listTwo = []
+            # For the length of the dungeon's vertical(y) floors:
+            for y in range(len(self.dungeon_map)):
+                # Clear first list each time
+                listOne = []
+                # For each room horizontally(x):
+                for x in self.dungeon_map[y]:
+                    # Add the item status(T/F) of that room to first list
+                    listOne.append(self.dungeon_rooms[x]["ItemStatus"])
+                # Append first list, which is the first vertical "floor"
+                # of the dungeon, to a new second list
+                listTwo.append(listOne)
+            return listTwo
+        except Exception:
+            print("There was an error.")
+
 ######################################################################
 # FUNCTIONS ---------------------------------------
 

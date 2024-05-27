@@ -23,9 +23,10 @@ import inventory
 # Import Menu module
 import menu
 
+# Player class
+playerClass = player.Player()
 #Map of item statuses in each room
-item_status_map = inventory.itemMap(dungeon_map, dungeon_rooms)
-
+itemStatusMap = map.ItemMap().itemMap()
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -40,17 +41,95 @@ def movePlayer(direct):
         # Depending on the direction chosen, player coordinates
         # are updated from the previous coordinates
         if direct == "Up":
-            player["yLoc"] -= 1
+            playerClass.player["yLoc"] -= 1
         elif direct == "Down":
-            player["yLoc"] += 1
+            playerClass.player["yLoc"] += 1
         elif direct == "Left":
-            player["xLoc"] -= 1
+            playerClass.player["xLoc"] -= 1
         elif direct == "Right":
-            player["xLoc"] += 1
+            playerClass.player["xLoc"] += 1
     except Exception:
         print("There was an error.")
 
 
+def resetCoordinates():
+    """This function checks if the player goes out of boundaries"""
+    # After player's coordinates are adjusted
+    # Check if the direction chosen makes the player
+    # go out of the map's boundaries
+    # If so, then do the opposite operation of
+    # whichever direction option was chosen to reset
+    # Player's coordinates to the most recently valid 
+    if playerClass.player["yLoc"] < 0:
+        playerClass.player["yLoc"] += 1
+        print("You have reached the border and cannot go further.")
+        return True
+    elif playerClass.player["yLoc"] > 2:
+        playerClass.player["yLoc"] -= 1
+        print("You have reached the border and cannot go further.")
+        return True
+    elif playerClass.player["xLoc"] < 0:
+        playerClass.player["xLoc"] += 1
+        print("You have reached the border and cannot go further.")
+        return True
+    elif playerClass.player["xLoc"] > 3:
+        playerClass.player["xLoc"] -= 1
+        print("You have reached the border and cannot go further.")
+        return True
+    else:
+        return False
+    
+
+def subMenu():
+    """This function processes all of the player's choices in submenu"""
+    # Check player's option
+    choice = menu.menuSub.createMenu()
+    if choice == "Quit":
+        return print("Quitting...") # Return if quit is chosen
+    elif choice == "Back":
+        # If choice is to go back to main menu, submenu loop off
+        print("\n")
+        print("Choose an option.")
+        return True
+    elif choice == "Search The Area":
+        print("\n")
+        # If Search The Area is chosen:
+        # Get current player location
+        playerLocation = \
+        map.Map().dungeon_map[playerClass.player["yLoc"]][playerClass.player["xLoc"]]
+        # Get current status of item in room
+        itemStatus = \
+        itemStatusMap[playerClass.player["yLoc"]][playerClass.player["xLoc"]]
+        # Take item, depending on the current room
+        # And item status
+        item = inventory.takeItem(playerLocation, itemLocation)
+        # Set current room's item status to False
+        # Because cannot collect a second time
+        item_status_map[player["yLoc"]][player["xLoc"]] = False
+
+    elif choice is not None:
+        # Otherwise, the direction choice chosen is valid
+        # Call function to update the player's coordinates
+        movePlayer(choice)
+        print("\n")
+
+
+
+        else:
+            # If the player is inside the map
+            # Enter Player coordinates into map to find
+            # the room that the Player is currently located in
+            playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
+            # Print that current room's description
+            print(dungeon_rooms[playerLocation]["Description"])
+            # While loop makes this sub menu continuous
+            # So Player continues forward
+            print("You continue forward.")
+            print("\n")
+    else:
+        print("Try again.")
+        print("\n")
+    
 def main():
     """Main function responsible for calling other functions"""
     loop = True
@@ -87,72 +166,7 @@ def main():
                 # Second while loop for continuous sub menu
                 secondLoop = True
                 while secondLoop: 
-                    # Call and check validity of player's choice of direction
-                    choice = direction()
-                    if choice == "Quit":
-                        return print("Quitting...") # Return if quit is chosen
-                    elif choice == "Back":
-                        # If choice is to go back to main menu,
-                        # Submenu loop off
-                        secondLoop = False
-                        # Main menu loop back on
-                        loop = True
-                        print("\n")
-                        print("Choose an option.")
-                    elif choice == "Search The Area":
-                        print("\n")
-                        # If Search The Area is chosen:
-                        # Get current player location
-                        playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
-                        # Get current status of item in room
-                        # True if there is an available item to collect, False if not
-                        itemLocation = item_status_map[player["yLoc"]][player["xLoc"]]
-                        # Take item, depending on the current room
-                        # And item status
-                        item = inventory.takeItem(playerLocation, itemLocation)
-                        # Set current room's item status to False
-                        # Because cannot collect a second time
-                        item_status_map[player["yLoc"]][player["xLoc"]] = False
-                        
-                    elif choice is not None:
-                        # Otherwise, the direction choice chosen is valid
-                        # Call function to update the player's coordinates
-                        movePlayer(choice)
-                        print("\n")
-                        
-                        # After player's coordinates are adjusted,
-                        # Check if the direction chosen makes the player
-                        # go out of the map's boundaries
-
-                        # If so, then do the opposite operation of
-                        # whichever direction option was chosen to reset
-                        # Player's coordinates to the most recently valid 
-                        if player["yLoc"] < 0:
-                            player["yLoc"] += 1
-                            print("You have reached the border and cannot go further.")
-                        elif player["yLoc"] > 2:
-                            player["yLoc"] -= 1
-                            print("You have reached the border and cannot go further.")
-                        elif player["xLoc"] < 0:
-                            player["xLoc"] += 1
-                            print("You have reached the border and cannot go further.")
-                        elif player["xLoc"] > 3:
-                            player["xLoc"] -= 1
-                            print("You have reached the border and cannot go further.")
-                        else:
-                            # If the player is inside the map
-                            # Enter Player coordinates into map to find
-                            # the room that the Player is currently located in
-                            playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
-                            # Print that current room's description
-                            print(dungeon_rooms[playerLocation]["Description"])
-                            # While loop makes this sub menu continuous
-                            # So Player continues forward
-                            print("You continue forward.")
-                            print("\n")
-                    else:
-                        print("Try again.")
-                        print("\n")
+                    
             else:
                 print("Try again.")
                 print("\n")

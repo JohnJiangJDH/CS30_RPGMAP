@@ -79,29 +79,3 @@ class Inventory:
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
-
-
-def itemMap(dungeonMap, dungeonRooms):
-    """
-    This function creates a map of the status of items in each room
-    of the dungeon.
-    """
-    try:
-        listOne = []
-        listTwo = []
-        # For the length of the dungeon's vertical(y) floors:
-        for y in range(len(dungeonMap)):
-            # Clear first list each time
-            listOne = []
-            # For each room horizontally(x):
-            for x in dungeonMap[y]:
-                # Add the item status(T/F) of that room to first list
-                listOne.append(dungeonRooms[x]["ItemStatus"])
-            # Append first list, which is the first vertical "floor"
-            # of the dungeon, to a new second list
-            listTwo.append(listOne)
-        return listTwo
-    except Exception:
-        print("There was an error.")
-
-
