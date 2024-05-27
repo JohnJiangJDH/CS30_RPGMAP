@@ -18,12 +18,8 @@ will be shown.
 import map
 # Import Inventory module
 import inventory
-# List of movement options for main menu
-movementOptions = ["Move", "View Map", "Check Inventory", "Quit"]
-# List of direction options for sub menu
-directionOptions = ["Up", "Down", "Left", "Right", "Search The Area", "Back", "Quit"]
-# Player coordinates to save current location. Begins at starting room (0,0)
-player = {"xLoc": 0, "yLoc": 0}
+
+
 # Database for the name and description of each individual room on map
 dungeon_rooms = {
     "Starting Room": {
