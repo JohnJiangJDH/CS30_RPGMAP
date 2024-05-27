@@ -82,95 +82,118 @@ def resetCoordinates():
 
 def subMenu():
     """This function processes all of the player's choices in submenu"""
-    # Check player's option
-    choice = menu.menuSub.createMenu()
-    if choice == "Quit":
-        return print("Quitting...") # Return if quit is chosen
-    elif choice == "Back":
-        # If choice is to go back to main menu, submenu loop off
-        print("\n")
-        print("Choose an option.")
-        return True
-    elif choice == "Search The Area":
-        print("\n")
-        # If Search The Area is chosen:
-        # Get current player location
-        playerLocation = \
-        map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
-        # Get current status of item in room
-        itemStatus = \
-        map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
-        # Take item
-        itemTaken = invenObj.takeItem(playerLocation, itemStatus)
-        # Set current room's item status to False 
-        # Cannot collect a second time
-        map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]] = False
-        return False
-    elif choice is not None:
-        # Otherwise, the choice chosen is for direction/movement
-        # Call movement function to update the player's coordinates
-        movePlayer(choice)
-        print("\n")
-        # Check if player goes out of map boundaries
-        if resetCoordinates():
-            return False
-        else:
-            # The player is inside the map
+    try:
+        # Check player's option
+        choice = menu.menuSub.createMenu()
+        if choice == "Quit":
+            return print("Quitting...") # Return if quit is chosen
+        elif choice == "Back":
+            # If choice is to go back to main menu, submenu loop off
+            print("\n")
+            print("Choose an option.")
+            return True
+        elif choice == "Search The Area":
+            print("\n")
+            # If Search The Area is chosen:
             # Get current player location
             playerLocation = \
             map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
-            # Print that current room's description
-            print(map.Map().dungeon_rooms[playerLocation]["Description"])
-            # Player continues forward
-            print("You continue forward.")
+            # Get current status of item in room
+            itemStatus = \
+            map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
+            # Take item
+            itemTaken = invenObj.takeItem(playerLocation, itemStatus)
+            # Update item to inventory
+            invenObj.updateItem(itemTaken)
+            # Set current room's item status to False 
+            # Cannot collect a second time
+            map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]] = False
+            return False
+        elif choice is not None:
+            # Otherwise, the choice chosen is for direction/movement
+            # Call movement function to update the player's coordinates
+            movePlayer(choice)
+            print("\n")
+            # Check if player goes out of map boundaries
+            if resetCoordinates():
+                return False
+            else:
+                # The player is inside the map
+                # Get current player location
+                playerLocation = \
+                map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
+                # Print that current room's name and description
+                print("You are in " + playerLocation)
+                print(map.Map().dungeon_rooms[playerLocation]["Description"])
+                # Player continues forward
+                print("You continue forward.")
+                print("\n")
+                return False
+        else:
+            print("Try again.")
             print("\n")
             return False
-    else:
-        print("Try again.")
-        print("\n")
-        return False
+    except:
+        print("There was an error.")
+
+
+def mainMenu():
+    """This function processes all of the player's choices in mainmenu"""
+    try:
+        # Check player's option
+        choice = menu.menuMain.createMenu()
+        if choice == "Quit":
+            return print("Quitting...") # Return if quit is chosen
+        elif choice == "View Map":
+            print("\n")
+            # If view map is chosen, print the map to console
+            # (The Player already begins with the map)
+            map.Map().readFile()
+            return True
+        elif choice == "Check Inventory":
+            print("\n")
+            # If Check Inventory is chosen:
+            # Print the items in the player's inventory. Initially 0.
+            invenObj.inventoryMenu()
+            print("\n")
+            return True
+        elif choice is not None:
+            # Otherwise, the player has chosen to move -> to submenu options
+            print(f"You have chosen to {choice}")
+            print("\n")
+            # No need to loop the main menu anymore
+            return False
+        else:
+            print("Try again.")
+            print("\n")
+            return True
+    except:
+        print("There was an error.")
 
 
 def main():
     """Main function responsible for calling other functions"""
-    loop = True
     try:
         # Print the initial room that the player starts in
-        print(dungeon_rooms["Starting Room"]["Description"])
+        print("You are in Starting Room")
+        print(map.Map().dungeon_rooms["Starting Room"]["Description"])
         # Player begins with map when entering dungeon
-        map.writeFile()
-        # While for continuous main menu
+        map.Map().writeFile()
+        
+        # While for continuous menus
+        loop = True
         while loop:
-            # Call and check validity of player's choice of movement
-            firstMenu = mainMenu()
-            if firstMenu == "Quit":
-                return print("Quitting...") # Return if quit is chosen
-            elif firstMenu == "View Map":
-                print("\n")
-                # If view map is chosen, print the map to console
-                # Since we already begin with the map in
-                # External file
-                map.readFile()
-            elif firstMenu == "Check Inventory":
-                print("\n")
-                # If Check Inventory is chosen:
-                # Print a menu with the names and amounts of items
-                # That are currently in the inventory. Initially 0.
-                inventory.inventoryMenu(inventoryItems)
-                print("\n")
-            elif firstMenu is not None:
-                # Otherwise, the movement choice chosen is valid
-                print(f"You have chosen to {firstMenu}")
-                print("\n")
-                # No need to loop the main menu anymore
-                loop = False
-                # Second while loop for continuous sub menu
-                secondLoop = True
-                while secondLoop: 
-                    
+            if loop is None:
+                break
             else:
-                print("Try again.")
-                print("\n")
+                # Call main menu
+                loop = mainMenu()
+                while loop is False:
+                    if loop is None:
+                        break
+                    else:
+                        # Call sub menu
+                        loop = subMenu()
     except Exception:
         print("There was an error.")
         
