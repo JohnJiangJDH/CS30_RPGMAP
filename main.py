@@ -27,6 +27,8 @@ import menu
 playerObj = player.Player()
 # Inventory object
 invenObj = inventory.Inventory()
+# Item map object
+itemMapObj = map.ItemMap().itemMap()
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -78,6 +80,16 @@ def resetCoordinates():
         return True
     else:
         return False
+
+
+def winGame():
+    """This function determines when the Player wins the game"""
+    # Check if there are any more items on the map
+    for y in range(len(itemMapObj)):
+        for x in itemMapObj[y]:   
+            if x:
+                return False
+    return True
     
 
 def subMenu():
@@ -100,15 +112,23 @@ def subMenu():
             map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
             # Get current status of item in room
             itemStatus = \
-            map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
+            itemMapObj[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
             # Take item
             itemTaken = invenObj.takeItem(playerLocation, itemStatus)
             # Update item to inventory
             invenObj.updateItem(itemTaken)
             # Set current room's item status to False 
             # Cannot collect a second time
-            map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]] = False
-            return False
+            itemMapObj[playerObj.player["yLoc"]][playerObj.player["xLoc"]] = False
+            # Check if player satisfies the win condition
+            if winGame():
+                print("\n")
+                print("------------------------------------------------------------")
+                print("You have collected everything on the map!")
+                print("You have won the game! CONGRATULATIONS!!!")
+                return print("\n")
+            else:
+                return False
         elif choice is not None:
             # Otherwise, the choice chosen is for direction/movement
             # Call movement function to update the player's coordinates

@@ -75,7 +75,7 @@ class Inventory:
         if self.itemGotten == "Staff":
             self.inventoryItems["Staff"] += 1
         elif self.itemGotten == "Book":
-            self.inventoryItems["Book"] += 1
+            self.inventoryItems["Book"] += 1        
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
