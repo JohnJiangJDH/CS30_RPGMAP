@@ -23,10 +23,10 @@ import inventory
 # Import Menu module
 import menu
 
-# Player class
-playerClass = player.Player()
-#Map of item statuses in each room
-itemStatusMap = map.ItemMap().itemMap()
+# Player object
+playerObj = player.Player()
+# Inventory object
+invenObj = inventory.Inventory()
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -41,13 +41,13 @@ def movePlayer(direct):
         # Depending on the direction chosen, player coordinates
         # are updated from the previous coordinates
         if direct == "Up":
-            playerClass.player["yLoc"] -= 1
+            playerObj.player["yLoc"] -= 1
         elif direct == "Down":
-            playerClass.player["yLoc"] += 1
+            playerObj.player["yLoc"] += 1
         elif direct == "Left":
-            playerClass.player["xLoc"] -= 1
+            playerObj.player["xLoc"] -= 1
         elif direct == "Right":
-            playerClass.player["xLoc"] += 1
+            playerObj.player["xLoc"] += 1
     except Exception:
         print("There was an error.")
 
@@ -60,20 +60,20 @@ def resetCoordinates():
     # If so, then do the opposite operation of
     # whichever direction option was chosen to reset
     # Player's coordinates to the most recently valid 
-    if playerClass.player["yLoc"] < 0:
-        playerClass.player["yLoc"] += 1
+    if playerObj.player["yLoc"] < 0:
+        playerObj.player["yLoc"] += 1
         print("You have reached the border and cannot go further.")
         return True
-    elif playerClass.player["yLoc"] > 2:
-        playerClass.player["yLoc"] -= 1
+    elif playerObj.player["yLoc"] > 2:
+        playerObj.player["yLoc"] -= 1
         print("You have reached the border and cannot go further.")
         return True
-    elif playerClass.player["xLoc"] < 0:
-        playerClass.player["xLoc"] += 1
+    elif playerObj.player["xLoc"] < 0:
+        playerObj.player["xLoc"] += 1
         print("You have reached the border and cannot go further.")
         return True
-    elif playerClass.player["xLoc"] > 3:
-        playerClass.player["xLoc"] -= 1
+    elif playerObj.player["xLoc"] > 3:
+        playerObj.player["xLoc"] -= 1
         print("You have reached the border and cannot go further.")
         return True
     else:
@@ -96,40 +96,41 @@ def subMenu():
         # If Search The Area is chosen:
         # Get current player location
         playerLocation = \
-        map.Map().dungeon_map[playerClass.player["yLoc"]][playerClass.player["xLoc"]]
+        map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
         # Get current status of item in room
         itemStatus = \
-        itemStatusMap[playerClass.player["yLoc"]][playerClass.player["xLoc"]]
-        # Take item, depending on the current room
-        # And item status
-        item = inventory.takeItem(playerLocation, itemLocation)
-        # Set current room's item status to False
-        # Because cannot collect a second time
-        item_status_map[player["yLoc"]][player["xLoc"]] = False
-
+        map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
+        # Take item
+        itemTaken = invenObj.takeItem(playerLocation, itemStatus)
+        # Set current room's item status to False 
+        # Cannot collect a second time
+        map.ItemMap().itemMap()[playerObj.player["yLoc"]][playerObj.player["xLoc"]] = False
+        return False
     elif choice is not None:
-        # Otherwise, the direction choice chosen is valid
-        # Call function to update the player's coordinates
+        # Otherwise, the choice chosen is for direction/movement
+        # Call movement function to update the player's coordinates
         movePlayer(choice)
         print("\n")
-
-
-
+        # Check if player goes out of map boundaries
+        if resetCoordinates():
+            return False
         else:
-            # If the player is inside the map
-            # Enter Player coordinates into map to find
-            # the room that the Player is currently located in
-            playerLocation = dungeon_map[player["yLoc"]][player["xLoc"]]
+            # The player is inside the map
+            # Get current player location
+            playerLocation = \
+            map.Map().dungeon_map[playerObj.player["yLoc"]][playerObj.player["xLoc"]]
             # Print that current room's description
-            print(dungeon_rooms[playerLocation]["Description"])
-            # While loop makes this sub menu continuous
-            # So Player continues forward
+            print(map.Map().dungeon_rooms[playerLocation]["Description"])
+            # Player continues forward
             print("You continue forward.")
             print("\n")
+            return False
     else:
         print("Try again.")
         print("\n")
-    
+        return False
+
+
 def main():
     """Main function responsible for calling other functions"""
     loop = True
