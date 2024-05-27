@@ -14,26 +14,18 @@ will be shown.
 ######################################################################
 # IMPORTS AND GLOBAL VARIABLES ---------------------------------------
 
-#Import Map module
+# Import Player module
+import player
+# Import Map module
 import map
 # Import Inventory module
 import inventory
+# Import Menu module
+import menu
 
-
-
-# Layout of map with rooms in a 4x3 multi-dimensional list
-dungeon_map = [
-    ["Starting Room", "Staff Room", "Upgrade Room", "Book Room"],
-    ["Eternal Slumber", "Book Room", "Hallway", "Staff Room"],
-    ["Staff Room", "Feasting Room", "Book Room", "Hallway"],
-]
 #Map of item statuses in each room
 item_status_map = inventory.itemMap(dungeon_map, dungeon_rooms)
-#Items in Inventory 
-inventoryItems = {
-    "Staff": 0,
-    "Book": 0
-}
+
 
 ######################################################################
 # FUNCTIONS ---------------------------------------
@@ -121,12 +113,7 @@ def main():
                         # Set current room's item status to False
                         # Because cannot collect a second time
                         item_status_map[player["yLoc"]][player["xLoc"]] = False
-                        # If item was successfully collected:
-                        # Update inventory items + amounts as needed
-                        if item == "Staff":
-                            inventoryItems["Staff"] += 1
-                        elif item == "Book":
-                            inventoryItems["Book"] += 1
+                        
                     elif choice is not None:
                         # Otherwise, the direction choice chosen is valid
                         # Call function to update the player's coordinates
